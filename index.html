@@ -3,15 +3,132 @@
     <head>
         <title>Sup</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+
+        
         <link rel="stylesheet" href="sup.css"/>
     </head>
     <body class="flex-container">
-            <div class="main">
-                Sup,
-                AZK here.
-            </div>
-        <footer>
+        
+
+        <div class="con">
+            <section class="sec start">
+                <script id="rendered-js" src="LIGHT.js"></script>
+                <div class="main">
+                    <div>
+                        Aadil Zaheer Khan
+                    </div>
+                    <p class="typed"> I am <span class="typed-text"></span> <span class="cursor">&nbsp;</span></p>
+                    <script src="typing.js"></script>
+                    
+                    
+                    <div class="btn-wrapper text-lg">
+                        
+                        <a href="https://twitter.com/hypernovik" class="btn btn-outline-light btn-rounded btn-icon">
+                            <span>
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                        
+                        <a href="https://www.instagram.com/print_aadil_/" class="btn btn-outline-light btn-rounded btn-icon">
+                            <span>
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                        <a href="https://github.com/Hypernovic" class="btn btn-outline-light btn-rounded btn-icon">
+                            <span>
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                        <a href="https://www.linkedin.com/in/aadil-zaheer-khan-758185234" class="btn btn-outline-light btn-rounded btn-icon">
+                            <span>
+                                <i class="fa fa-linkedin"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+            <section class="sec check container">
+                <h1 class="display-3">Languages Known</h1>
+                <nav>
+                    <nav>
+                        <div class="nav nav-tabs col-12" id="nav-tab" role="tablist">
+                          <button class="nav-link active" id="nav-python-tab" data-bs-toggle="tab" data-bs-target="#nav-python" type="button" role="tab" aria-controls="nav-python" aria-selected="false">Python</button>
+                          <button class="nav-link" id="nav-JVM-tab" data-bs-toggle="tab" data-bs-target="#nav-JVM" type="button" role="tab" aria-controls="nav-JVM" aria-selected="true">JVM-Based</button>
+                          <button class="nav-link" id="nav-web-tab" data-bs-toggle="tab" data-bs-target="#nav-web" type="button" role="tab" aria-controls="nav-web" aria-selected="false">Web-Based</button>
+                        </div>
+                      </nav>
+                      <div class="tab-content" id="nav-tabContent">
+                        <div class="flex-tab tab-pane fade show active " id="nav-python" role="tabpanel" aria-labelledby="nav-python-tab">
+                            <div class="python row">
+                                <div class="pic col-4 d-flex justify-content-center">
+                                    <img src="http://assets.stickpng.com/images/5848152fcef1014c0b5e4967.png" class="img-fluid float-left tab-image">
+                                </div>
+                                <div class="rating col-8 align-self-center">
+                                    Flask
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                                      </div>
+                                      Plotly
+                                      <div class="progress">
+                                          <div class="progress-bar" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        MATLAB
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                      </div>
+                                </div>
+                            </div>
+                            </div>
+                        <div class="flex-tab tab-pane fade" id="nav-JVM" role="tabpanel" aria-labelledby="nav-JVM-tab">
+                            <div class="jvm row">
+                            <div class="pic col-4 d-flex justify-content-center">
+                                <img src="http://assets.stickpng.com/images/58480979cef1014c0b5e4901.png" class="img-fluid float-left tab-image" style="zoom: 0.8 !important;">
+                            </div>
+                            <div class="rating col-8 align-self-center">
+                                Kotlin
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                                  </div>
+                                  Java
+                                  <div class="progress">
+                                      <div class="progress-bar" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                
+                            </div>
+                        </div></div>
+                        <div class="flex-tab tab-pane fade" id="nav-web" role="tabpanel" aria-labelledby="nav-web-tab">
+                            <div class="web row">
+                            <div class="pic col-4 d-flex justify-content-center">
+                                <img src="https://www.pngall.com/wp-content/uploads/4/World-Wide-Web-PNG-Picture.png" class="img-fluid float-left tab-image">
+                            </div>
+                            <div class="rating col-8 align-self-center">
+                                Javascript
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                                  </div>
+                                  HTML
+                                  <div class="progress">
+                                      <div class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    CSS
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                  </div>
+                            </div>
+                        </div></div>
+                      </div>
+        
+                </nav>
+            
                 
-        </footer>
+            </section>
+        </div>
     </body>
 </html>
