@@ -78,7 +78,8 @@ body {
 }
 .con section{
     scroll-snap-align: start;
-    height: 100vh;
+    min-height: 100vh;
+    max-height: fit-content;
 }
 
 .check{
@@ -131,5 +132,20 @@ footer{
 @media only screen and (max-width:1200px) {
   .languages {
     height: 25% !important;
+  }
+}
+
+@media only screen and (max-width:1300px) and (max-height:600px) and (orientation: landscape) {
+  
+  .languages {
+    height: 100vh !important;
+    border-bottom: 1px solid;
+  }
+  .about-me{
+    display: flex;
+    scroll-snap-align: start;
+    height: 100vh;
+    width: 100vw;
+    align-items: center;
   }
 }
