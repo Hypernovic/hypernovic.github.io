@@ -4,6 +4,11 @@
         <title>Sup</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
+        <link rel="apple-touch-icon" sizes="180x180" href="https://iili.io/HWGNxqv.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="https://iili.io/HWGNnLJ.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="https://iili.io/HWGNBzg.png">
+
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
@@ -54,105 +59,167 @@
                     </div>
                 </div>
             </section>
-            <section class="sec check container">
+            <section class="sec check container project">
+                <h1 class="display-3">Projects</h1>
+                <div id="filler" class="movielist row row-cols-2" >
+                    <div class="listed" onclick="confirmModal(this)">
+                        <div class="col my-4 my-lg-1 my-xl-1">
+                            <div class="card">
+                                <img src="https://iili.io/HWGjSMx.png" class="card-img-top">
+                                <div class="card-body">
+                                    <a href="https://www.foursquare.info/" target="_blank"><h5 class="card-title">Foursquare</h5></a>
+                                    <p>A Construction Mediator site, built on Flask deployed on AWS lambda with firebase</p>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+
+                    <div class="listed" onclick="confirmModal(this)">
+                        <div class="col my-4 my-lg-1 my-xl-1">
+                            <div class="card">
+                                <img src="https://iili.io/HWGj8nj.png" class="card-img-top">
+                                <div class="card-body">
+                                    <a href="https://github.com/Hypernovic/QuizApp" target="_blank"><h5 class="card-title">Scholar Monks</h5></a>
+                                    <p>An Android Open-Source Quiz App, Fetches from Flask deployed on AWS EC2 instance</p>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+
+                    <div class="listed" onclick="confirmModal(this)">
+                        <div class="col my-4 my-lg-1 my-xl-1">
+                            <div class="card">
+                                <img src="https://iili.io/HWGjU6Q.png" class="card-img-top">
+                                <div class="card-body">
+                                    <a href="https://movierecommender-e7xi.onrender.com/" target="_blank"><h5 class="card-title">MovieRecommender</h5></a>
+                                    <p>A Machine Learning Based Movie Recommender with Account Creation</p>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+
+                    <div class="listed" onclick="confirmModal(this)">
+                        <div class="col my-4 my-lg-1 my-xl-1">
+                            <div class="card">
+                                <img src="https://iili.io/HWGjkZb.png" class="card-img-top">
+                                <div class="card-body">
+                                    <a href="https://github.com/Hypernovic/GitHard" target="_blank"><h5 class="card-title">GitHard (in-devlopment)</h5></a>
+                                    <p>A Feature Rich Open-Source Schematic Designer built on Python-Flask</p>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+
+                    
+
+                    
+
+
+                    
+                </div>
+            </section>
+
+            <section class="sec check container langsabout">
                 <h1 class="display-3">Languages Known</h1>
-                <nav class="languages">
-                    <nav>
-                        <div class="nav nav-tabs col-12" id="nav-tab" role="tablist">
-                          <button class="nav-link active" id="nav-python-tab" data-bs-toggle="tab" data-bs-target="#nav-python" type="button" role="tab" aria-controls="nav-python" aria-selected="false">Python</button>
-                          <button class="nav-link" id="nav-JVM-tab" data-bs-toggle="tab" data-bs-target="#nav-JVM" type="button" role="tab" aria-controls="nav-JVM" aria-selected="true">JVM-Based</button>
-                          <button class="nav-link" id="nav-web-tab" data-bs-toggle="tab" data-bs-target="#nav-web" type="button" role="tab" aria-controls="nav-web" aria-selected="false">Web-Based</button>
-                        </div>
-                      </nav>
-                      <div class="tab-content" id="nav-tabContent">
-                        <div class="flex-tab tab-pane fade show active " id="nav-python" role="tabpanel" aria-labelledby="nav-python-tab">
-                            <div class="python row">
+                <div class="flex-container-last">
+                    <nav class="languages">
+                        <nav>
+                            <div class="nav nav-tabs col-12" id="nav-tab" role="tablist">
+                              <button class="nav-link active" id="nav-python-tab" data-bs-toggle="tab" data-bs-target="#nav-python" type="button" role="tab" aria-controls="nav-python" aria-selected="false">Python</button>
+                              <button class="nav-link" id="nav-JVM-tab" data-bs-toggle="tab" data-bs-target="#nav-JVM" type="button" role="tab" aria-controls="nav-JVM" aria-selected="true">JVM-Based</button>
+                              <button class="nav-link" id="nav-web-tab" data-bs-toggle="tab" data-bs-target="#nav-web" type="button" role="tab" aria-controls="nav-web" aria-selected="false">Web-Based</button>
+                            </div>
+                          </nav>
+                          <div class="tab-content" id="nav-tabContent">
+                            <div class="flex-tab tab-pane fade show active " id="nav-python" role="tabpanel" aria-labelledby="nav-python-tab">
+                                <div class="python row">
+                                    <div class="pic col-4 d-flex justify-content-center">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Python_logo_01.svg/768px-Python_logo_01.svg.png" class="img-fluid float-left tab-image">
+                                    </div>
+                                    <div class="rating col-8 align-self-center">
+                                        Flask
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                                          </div>
+                                          Selenium
+                                          <div class="progress">
+                                              <div class="progress-bar" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            NumPy
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                          </div>
+                                    </div>
+                                </div>
+                                </div>
+                            <div class="flex-tab tab-pane fade" id="nav-JVM" role="tabpanel" aria-labelledby="nav-JVM-tab">
+                                <div class="jvm row">
                                 <div class="pic col-4 d-flex justify-content-center">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Python_logo_01.svg/768px-Python_logo_01.svg.png" class="img-fluid float-left tab-image">
+                                    <img src="https://i.ibb.co/TW1CnnR/Hnet-com-image-1.png" class="img-fluid float-left tab-image">
                                 </div>
                                 <div class="rating col-8 align-self-center">
-                                    Flask
+                                    Kotlin
                                     <div class="progress">
                                         <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                                       </div>
-                                      Selenium
+                                      Java
                                       <div class="progress">
                                           <div class="progress-bar" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
-                                        NumPy
+                                        <div style="visibility: hidden;">
+                                            HI
+                                            <div class="progress" >
+                                                <div class="progress-bar" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                              </div>
+    
+                                        </div>
+                                        
+    
+                                    
+                                </div>
+                            </div></div>
+                            <div class="flex-tab tab-pane fade" id="nav-web" role="tabpanel" aria-labelledby="nav-web-tab">
+                                <div class="web row">
+                                <div class="pic col-4 d-flex justify-content-center">
+                                    <img src="https://i.ibb.co/GtTwf1k/World-Wide-Web-PNG-Picture.png" class="img-fluid float-left tab-image">
+                                </div>
+                                <div class="rating col-8 align-self-center">
+                                    Javascript
                                     <div class="progress">
-                                        <div class="progress-bar" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                                      </div>
+                                      HTML
+                                      <div class="progress">
+                                          <div class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        CSS
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                       </div>
                                 </div>
                             </div>
-                            </div>
-                        <div class="flex-tab tab-pane fade" id="nav-JVM" role="tabpanel" aria-labelledby="nav-JVM-tab">
-                            <div class="jvm row">
-                            <div class="pic col-4 d-flex justify-content-center">
-                                <img src="https://i.ibb.co/TW1CnnR/Hnet-com-image-1.png" class="img-fluid float-left tab-image">
-                            </div>
-                            <div class="rating col-8 align-self-center">
-                                Kotlin
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                  </div>
-                                  Java
-                                  <div class="progress">
-                                      <div class="progress-bar" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <div style="visibility: hidden;">
-                                        HI
-                                        <div class="progress" >
-                                            <div class="progress-bar" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                          </div>
-
-                                    </div>
-                                    
-
-                                
-                            </div>
-                        </div></div>
-                        <div class="flex-tab tab-pane fade" id="nav-web" role="tabpanel" aria-labelledby="nav-web-tab">
-                            <div class="web row">
-                            <div class="pic col-4 d-flex justify-content-center">
-                                <img src="https://i.ibb.co/GtTwf1k/World-Wide-Web-PNG-Picture.png" class="img-fluid float-left tab-image">
-                            </div>
-                            <div class="rating col-8 align-self-center">
-                                Javascript
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                  </div>
-                                  HTML
-                                  <div class="progress">
-                                      <div class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    CSS
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                  </div>
-                            </div>
                         </div>
-                    </div>
-                      </div>
-                </nav>
-                <div class="about-me container">
-                    <div class="row justify-content-evenly">
-                        <!-- <div class="col-lg-3 text-center">
-                            <img src="https://i.ibb.co/JvxvLTH/image.png" class="rounded" style="margin: 4vw;">
-                        </div> -->
-                        <div class="col-lg-7">
-                            <h1 >About me</h1>
-                            <img src="https://i.ibb.co/JvxvLTH/image.png" class="rounded pull-left mx-3">
-                            <span class="">
-                                Spider-Man web Slings, Aadil web devs(pretty lame huh).
-                                A Fresher with a keen interest in everything Android.
-                                When not at work, you will find him yelling at his monitors while playing video games or lurking on Reddit.
-                            </span>
+                          </div>
+                    </nav>
+
+                    <div class="about-me container ">
+                        <div class="row justify-content-evenly">
+                            <div class="col-lg-7">
+                                <h1 >About me</h1>
+                                <img src="https://i.ibb.co/JvxvLTH/image.png" class="rounded pull-left mx-3">
+                                <span class="">
+                                    Spider-Man web Slings, Aadil web devs(pretty lame huh).
+                                    A Fresher with a keen interest in everything Android.
+                                    When not at work, you will find him yelling at his monitors while playing video games or lurking on Reddit.
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
+                
             </section>
+            
             <footer>
 
             </footer>
