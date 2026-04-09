@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Industrial Smart Tracker 3D</title>
+    <style>
+        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #2f3640; font-family: sans-serif; }
+        #oled-canvas { display: none; }
+        #instructions {
+            position: absolute; top: 12px; left: 12px; right: 12px; color: #fff; background: rgba(0,0,0,0.72);
+            padding: 12px; border-radius: 8px; pointer-events: none; border: 1px solid #fbc531; z-index: 10;
+            max-width: calc(100vw - 24px);
+            font-size: 0.92rem;
+            line-height: 1.4;
+        }
+        .highlight { color: #fbc531; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<!-- <div id="instructions">
+    <h3>BW-Style Smart Tracker</h3>
+    <p>• Click & drag to rotate the device.</p>
+    <p>• Click the <span class="highlight">RFID TAP ZONE</span> (Top Blue Plate) to instantly sync attendance.</p>
+    <p>• Click the <span class="highlight">MAIN</span> button to Select/Back.</p>
+    <p>• Click <span class="highlight">UP / DOWN</span> buttons to navigate.</p>
+</div> -->
+
+<!-- 0.91" OLED Canvas -->
+<canvas id="oled-canvas" width="256" height="64"></canvas>
+
+<script type="importmap">
+    { 
+        "imports": { 
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "orbitControls": "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js"
+        } 
+    }
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'orbitControls';
+
+    // ==========================================
+    // BACKEND SIMULATION IN FRONTEND
+    // ==========================================
+    let device_state = {
+        "screen": "home", // Screens: home, menu, sensors, uwb, voice, alert
+        "cursor_index": 0,
+        "user": "Unassigned",
+        "attendance": "Pending",
+        "uwb_zone": "None",
+        "menu_items":[
+            {"id": "sensors", "name": "Live Sensors"},
+            {"id": "uwb",     "name": "Location (UWB)"},
+            {"id": "voice",   "name": "915MHz Voice"},
+            {"id": "alert",   "name": "Test Alarm"}
+        ],
+        // Simulated Gas Levels
+        "sensors": { "h2s": 0.0, "lel": 0, "cl2": 0.0, "nh3": 0.0 }
+    };
+
+    function simulate_sensors() {
+        device_state["sensors"]["h2s"] = Math.max(0.0, device_state["sensors"]["h2s"] + (Math.random() * 0.4 - 0.2)).toFixed(1) * 1;
+        if (Math.random() > 0.8) {
+            device_state["sensors"]["lel"] = Math.min(5, Math.max(0, device_state["sensors"]["lel"] + (Math.random() > 0.5 ? 1 : -1)));
+        }
+    }
+
+    function handle_input(btn) {
+        // RFID TAP TO SYNC LOGIC
+        if (btn === "RFID_TAP") {
+            device_state["user"] = "EMP-748 (J.Doe)";
+            device_state["attendance"] = "Logged In";
+            device_state["uwb_zone"] = "Sector 4G";
+            device_state["screen"] = "home";
+            return;
+        }
+
+        // BUTTON NAVIGATION LOGIC
+        if (device_state["screen"] === "home") {
+            if (btn === "SELECT") {
+                device_state["screen"] = "menu";
+            }
+        } else if (device_state["screen"] === "menu") {
+            if (btn === "DOWN") {
+                device_state["cursor_index"] = (device_state["cursor_index"] + 1) % device_state["menu_items"].length;
+            } else if (btn === "UP") {
+                device_state["cursor_index"] = (device_state["cursor_index"] - 1 + device_state["menu_items"].length) % device_state["menu_items"].length;
+            } else if (btn === "SELECT") {
+                device_state["screen"] = device_state["menu_items"][device_state["cursor_index"]]["id"];
+            }
+        } else if (["sensors", "uwb", "voice", "alert"].includes(device_state["screen"])) {
+            if (btn === "SELECT") {
+                const was_alert = device_state["screen"] === "alert";
+                device_state["screen"] = "menu";
+                if (was_alert) {
+                    device_state["sensors"]["h2s"] = 0.0;
+                }
+            }
+        }
+    }
+
+    // ==========================================
+    // 1. OLED CANVAS LOGIC (256x64)
+    // ==========================================
+    const oledCanvas = document.getElementById('oled-canvas');
+    const ctx = oledCanvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false; 
+    ctx.textBaseline = "top"; 
+
+    let state = { ...device_state };
+
+    drawOLED();
+
+    function updateState() {
+        simulate_sensors();
+        // Check for alerts
+        if (device_state["sensors"]["h2s"] > 20.0 || device_state["sensors"]["lel"] > 20) {
+            device_state["screen"] = "alert";
+        }
+        state = { ...device_state, "time": new Date().toTimeString().slice(0, 5) };
+        drawOLED();
+    }
+
+    function sendInput(btnName) {
+        handle_input(btnName);
+        updateState();
+    }
+
+    function drawOLED() {
+        ctx.fillStyle = '#000000'; 
+        ctx.fillRect(0, 0, 256, 64);
+        ctx.fillStyle = '#00d2ff'; 
+        ctx.font = '14px monospace';
+
+        if(state.screen !== "alert") {
+            ctx.font = '10px monospace';
+            ctx.fillText(`UWB: ${state.uwb_zone === "None" ? "Searching" : state.uwb_zone}`, 5, 2);
+            ctx.fillText(`${state.time}`, 200, 2);
+            ctx.fillRect(0, 14, 256, 1); 
+        }
+
+        ctx.font = '14px monospace';
+
+        if (state.screen === "home") {
+            ctx.fillText(`ID: ${state.user}`, 10, 20);
+            ctx.fillText(`Status: ${state.attendance}`, 10, 40);
+            if(state.user === "Unassigned") ctx.fillText("[ TAP RFID TO SYNC ]", 110, 30);
+        } 
+        else if (state.screen === "menu") {
+            let startIdx = state.cursor_index >= 2 ? 2 : 0;
+            for(let i=0; i<2; i++) {
+                if(!state.menu_items[startIdx + i]) break;
+                const isSelected = (startIdx + i) === state.cursor_index;
+                if (isSelected) ctx.fillText(">", 5, 20 + (i * 20));
+                ctx.fillText(state.menu_items[startIdx + i].name, 25, 20 + (i * 20));
+            }
+        } 
+        else if (state.screen === "sensors") {
+            ctx.fillText(`H2S: ${state.sensors.h2s} ppm`, 10, 20);
+            ctx.fillText(`LEL: ${state.sensors.lel} %`, 140, 20);
+            ctx.fillText(`Cl2: ${state.sensors.cl2} ppm`, 10, 40);
+            ctx.fillText(`NH3: ${state.sensors.nh3} ppm`, 140, 40);
+        }
+        else if (state.screen === "uwb") {
+            ctx.fillText(`Acc: Sub-30cm (Active)`, 10, 20);
+            ctx.fillText(`Zone: ${state.uwb_zone}`, 10, 40);
+        }
+        else if (state.screen === "voice") {
+            ctx.fillText(`[ 915MHz VOICE CH-4 ]`, 40, 20);
+            ctx.fillText(`Hold MAIN to Transmit`, 40, 40);
+        }
+        else if (state.screen === "alert") {
+            const timeSec = new Date().getSeconds();
+            if (timeSec % 2 === 0) {
+                ctx.fillStyle = '#ff0000';
+                ctx.fillRect(0,0,256,64);
+                ctx.fillStyle = '#ffffff';
+            } else {
+                ctx.fillStyle = '#ff0000';
+            }
+            ctx.font = 'bold 18px monospace';
+            ctx.fillText("EVACUATE!", 80, 15);
+            ctx.font = '14px monospace';
+            ctx.fillText(`H2S DETECTED: ${state.sensors.h2s} ppm`, 35, 40);
+        }
+    }
+
+    // ==========================================
+    // 2. THREE.JS SCENE & TRACKER MODELING
+    // ==========================================
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, -2, 10);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.domElement.style.display = 'block';
+    renderer.domElement.style.touchAction = 'none';
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.rotateSpeed = 0.8;
+    controls.enablePan = false;
+    controls.screenSpacePanning = false;
+    controls.minDistance = 4;
+    controls.maxDistance = 18;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    dirLight.position.set(5, 5, 5);
+    dirLight.castShadow = true;
+    scene.add(dirLight);
+
+    const trackerGroup = new THREE.Group();
+    scene.add(trackerGroup);
+
+    // MATERIALS
+    const yellowMat = new THREE.MeshStandardMaterial({ color: 0xfbc531, roughness: 0.6 }); 
+    const rubberMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
+    const metalMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.4, metalness: 0.8 });
+    const btnMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.7 });
+    const rfidMat = new THREE.MeshStandardMaterial({ color: 0x0097e6, roughness: 0.3 }); 
+
+    function roundedRect(w, h, r) {
+        const s = new THREE.Shape();
+        s.moveTo(-w/2+r, h/2);
+        s.lineTo(w/2-r, h/2); s.quadraticCurveTo(w/2, h/2, w/2, h/2-r);
+        s.lineTo(w/2, -h/2+r); s.quadraticCurveTo(w/2, -h/2, w/2-r, -h/2);
+        s.lineTo(-w/2+r, -h/2); s.quadraticCurveTo(-w/2, -h/2, -w/2, -h/2+r);
+        s.lineTo(-w/2, h/2-r); s.quadraticCurveTo(-w/2, h/2, -w/2+r, h/2);
+        return s;
+    }
+    
+    // Base yellow body
+    const body = new THREE.Mesh(new THREE.ExtrudeGeometry(roundedRect(3.5, 5.5, 0.4), { depth: 1.0, bevelEnabled: true, bevelSize: 0.1 }).center(), yellowMat);
+    trackerGroup.add(body);
+
+    // Enlarged Bumper
+    const bumper = new THREE.Mesh(new THREE.ExtrudeGeometry(roundedRect(3.8, 5.8, 0.4), { depth: 0.9, bevelEnabled: false }).center(), rubberMat);
+    trackerGroup.add(bumper);
+
+    // --- C. OLED Screen ---
+    const oledTex = new THREE.CanvasTexture(oledCanvas);
+    oledTex.colorSpace = THREE.SRGBColorSpace;
+    oledTex.minFilter = THREE.NearestFilter;
+    oledTex.magFilter = THREE.NearestFilter;
+    
+    const screenMesh = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 0.625), new THREE.MeshBasicMaterial({ map: oledTex }));
+    screenMesh.position.set(0.00, 1.40, 0.75); 
+    trackerGroup.add(screenMesh);
+
+    const bezel = new THREE.Mesh(new THREE.PlaneGeometry(2.7, 0.8), rubberMat);
+    bezel.position.set(0.00, 1.40, 0.73);
+    trackerGroup.add(bezel);
+
+    // --- D. Sensor Grills (Horizontal Row) ---
+    const positions =[
+        [-0.40, 0.30], // Sensor 1
+        [0.40, 0.30],  // Sensor 2
+        [-1.20, 0.30], // Sensor 3
+        [1.20, 0.30]   // Sensor 4
+    ];
+    
+    const allSensorsGroup = new THREE.Group();
+    positions.forEach((pos, i) => {
+        const singleSensor = new THREE.Group();
+        singleSensor.position.set(pos[0], pos[1], 0.7); // Applied Z: 0.70
+
+        const grillOuter = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.1, 16), metalMat);
+        grillOuter.rotation.x = Math.PI / 2;
+        const grillInner = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 0.12, 16), rubberMat);
+        grillInner.rotation.x = Math.PI / 2;
+
+        singleSensor.add(grillOuter);
+        singleSensor.add(grillInner);
+        allSensorsGroup.add(singleSensor);
+    });
+    trackerGroup.add(allSensorsGroup);
+
+    // --- E. Interactable Buttons ---
+    const interactables =[];
+    function createBtn(geom, mat, x, y, z, name) {
+        const mesh = new THREE.Mesh(geom, mat);
+        mesh.position.set(x, y, z);
+        mesh.rotation.x = Math.PI / 2;
+        mesh.userData = { name: name, startZ: z }; // Dynamic Z mapping for click animations
+        trackerGroup.add(mesh);
+        interactables.push(mesh);
+        return mesh;
+    }
+
+    createBtn(new THREE.CylinderGeometry(0.5, 0.5, 0.2, 32), btnMat, -0.30, -1.00, 0.75, "SELECT");
+    createBtn(new THREE.CylinderGeometry(0.2, 0.2, 0.2, 16), btnMat, 1.00, -0.75, 0.75, "UP");
+    createBtn(new THREE.CylinderGeometry(0.2, 0.2, 0.2, 16), btnMat, 1.00, -1.25, 0.75, "DOWN");
+
+    const rfidPlate = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.1, 0.8), rfidMat);
+    rfidPlate.position.set(0.00, 2.90, 0.00); 
+    rfidPlate.userData = { name: "RFID_TAP", startY: 2.90 };
+    trackerGroup.add(rfidPlate);
+    interactables.push(rfidPlate);
+
+    // ==========================================
+    // 3. INPUT & RENDER LOOP
+    // ==========================================
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    window.addEventListener('pointerdown', (event) => {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(interactables);
+
+        if (intersects.length > 0) {
+            const btn = intersects[0].object;
+            const btnName = btn.userData.name;
+            
+            // Animation respects new XYZ starting coordinates
+            if(btnName === "RFID_TAP") {
+                btn.position.y = btn.userData.startY - 0.05;
+                setTimeout(() => { btn.position.y = btn.userData.startY; }, 150);
+            } else {
+                btn.position.z = btn.userData.startZ - 0.1;
+                setTimeout(() => { btn.position.z = btn.userData.startZ; }, 150);
+            }
+            sendInput(btnName);
+        }
+    });
+
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        if (oledTex) oledTex.needsUpdate = true;
+        renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    updateState();
+    animate();
+    setInterval(updateState, 3000); 
+
+</script>
+</body>
+</html>
